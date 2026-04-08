@@ -12,6 +12,7 @@ import RentalRequests from "@/pages/RentalRequests";
 import NewRentalRequest from "@/pages/NewRentalRequest";
 import Properties from "@/pages/Properties";
 import NewProperty from "@/pages/NewProperty";
+import PropertyDetail from "@/pages/PropertyDetail";
 import Payments from "@/pages/Payments";
 import Agencies from "@/pages/Agencies";
 import NewAgency from "@/pages/NewAgency";
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/rental-requests/new" element={<NewRentalRequest />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/properties/new" element={<NewProperty />} />
+              <Route path="/properties/:id" element={<PropertyDetail />} />
               <Route path="/payments" element={<Payments />} />
               <Route path="/agencies" element={<Agencies />} />
               <Route path="/agencies/new" element={<NewAgency />} />

@@ -10,16 +10,25 @@ import StatCard from "@/components/StatCard";
 import StatusBadge from "@/components/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { mockUsers } from "@/data/mockData";
+import type { User } from "@/data/mockData";
+import UserDetailDialog from "@/components/UserDetailDialog";
 
 const UsersPage = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const filtered = mockUsers
     .filter((u) => u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()))
     .filter((u) => statusFilter === "all" || u.status === statusFilter);
 
   const totalRentals = mockUsers.reduce((sum, u) => sum + u.rentals, 0);
+
+  const openUserDetail = (user: User) => {
+    setSelectedUser(user);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -83,7 +92,7 @@ const UsersPage = () => {
                   <TableCell><StatusBadge status={user.status} /></TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-8 w-8"><Eye className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openUserDetail(user)}><Eye className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8"><Edit className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive"><Ban className="h-4 w-4" /></Button>
                     </div>
@@ -94,6 +103,8 @@ const UsersPage = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <UserDetailDialog user={selectedUser} open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   );
 };
