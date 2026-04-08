@@ -12,7 +12,6 @@ import RentalRequests from "@/pages/RentalRequests";
 import NewRentalRequest from "@/pages/NewRentalRequest";
 import Properties from "@/pages/Properties";
 import NewProperty from "@/pages/NewProperty";
-import PropertyDetail from "@/pages/PropertyDetail";
 import Payments from "@/pages/Payments";
 import Agencies from "@/pages/Agencies";
 import NewAgency from "@/pages/NewAgency";
