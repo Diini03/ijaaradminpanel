@@ -11,6 +11,7 @@ import StatusBadge from "@/components/StatusBadge";
 import { mockProperties } from "@/data/mockData";
 
 const Properties = () => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("all");
   const [search, setSearch] = useState("");
 
