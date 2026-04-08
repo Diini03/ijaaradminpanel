@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Briefcase, Clock, Users, Plus, Filter, Eye, CheckCircle, Ban } from "lucide-react";
+import { Briefcase, Clock, Users, Plus, Eye, CheckCircle, Ban } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,10 +10,14 @@ import StatCard from "@/components/StatCard";
 import StatusBadge from "@/components/StatusBadge";
 import { Badge } from "@/components/ui/badge";
 import { mockAgencies } from "@/data/mockData";
+import type { Agency } from "@/data/mockData";
+import AgencyDetailDialog from "@/components/AgencyDetailDialog";
 
 const Agencies = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedAgency, setSelectedAgency] = useState<Agency | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const filtered = mockAgencies
     .filter((a) => a.name.toLowerCase().includes(search.toLowerCase()))
@@ -21,6 +25,11 @@ const Agencies = () => {
 
   const pendingCount = mockAgencies.filter((a) => a.status === "Pending").length;
   const totalRentals = mockAgencies.reduce((sum, a) => sum + a.activeRentals, 0);
+
+  const openDetail = (agency: Agency) => {
+    setSelectedAgency(agency);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -66,7 +75,7 @@ const Agencies = () => {
             </TableHeader>
             <TableBody>
               {filtered.map((agency) => (
-                <TableRow key={agency.id}>
+                <TableRow key={agency.id} className="cursor-pointer" onClick={() => openDetail(agency)}>
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <img src={agency.avatar} alt={agency.name} className="h-9 w-9 rounded-full" />
@@ -84,12 +93,12 @@ const Agencies = () => {
                   <TableCell className="text-sm">{agency.activeRentals}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button variant="ghost" size="icon" className="h-8 w-8"><Eye className="h-4 w-4" /></Button>
+                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={(e) => { e.stopPropagation(); openDetail(agency); }}><Eye className="h-4 w-4" /></Button>
                       {agency.status === "Pending" && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-success"><CheckCircle className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-success" onClick={(e) => e.stopPropagation()}><CheckCircle className="h-4 w-4" /></Button>
                       )}
                       {agency.status !== "Suspended" && (
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive"><Ban className="h-4 w-4" /></Button>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={(e) => e.stopPropagation()}><Ban className="h-4 w-4" /></Button>
                       )}
                     </div>
                   </TableCell>
@@ -99,6 +108,8 @@ const Agencies = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <AgencyDetailDialog agency={selectedAgency} open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   );
 };

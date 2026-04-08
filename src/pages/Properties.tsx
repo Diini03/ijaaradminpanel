@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Building2, Clock, CheckCircle, XCircle, Plus, Filter, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,11 +9,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import StatCard from "@/components/StatCard";
 import StatusBadge from "@/components/StatusBadge";
 import { mockProperties } from "@/data/mockData";
+import type { Property } from "@/data/mockData";
+import PropertyDetailDialog from "@/components/PropertyDetailDialog";
 
 const Properties = () => {
-  const navigate = useNavigate();
   const [tab, setTab] = useState("all");
   const [search, setSearch] = useState("");
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const counts = {
     all: mockProperties.length,
@@ -24,6 +27,11 @@ const Properties = () => {
 
   const filtered = (tab === "all" ? mockProperties : mockProperties.filter((p) => p.status === tab))
     .filter((p) => p.name.toLowerCase().includes(search.toLowerCase()));
+
+  const openDetail = (prop: Property) => {
+    setSelectedProperty(prop);
+    setDialogOpen(true);
+  };
 
   return (
     <div className="space-y-6">
@@ -73,7 +81,7 @@ const Properties = () => {
                 </TableHeader>
                 <TableBody>
                   {filtered.map((prop) => (
-                    <TableRow key={prop.id}>
+                    <TableRow key={prop.id} className="cursor-pointer" onClick={() => openDetail(prop)}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-14 rounded bg-muted flex items-center justify-center text-[10px] text-muted-foreground">{prop.type}</div>
@@ -90,8 +98,8 @@ const Properties = () => {
                       <TableCell><StatusBadge status={prop.status} /></TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => navigate(`/properties/${prop.id}`)}>View</Button>
-                          <Button variant="ghost" size="sm" className="h-7 text-xs">Edit</Button>
+                          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={(e) => { e.stopPropagation(); openDetail(prop); }}>View</Button>
+                          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={(e) => e.stopPropagation()}>Edit</Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -102,6 +110,8 @@ const Properties = () => {
           </Tabs>
         </CardContent>
       </Card>
+
+      <PropertyDetailDialog property={selectedProperty} open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
   );
 };
