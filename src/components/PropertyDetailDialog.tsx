@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Wifi, Wind, Waves, Dumbbell, Car, Tv, UtensilsCrossed, WashingMachine, CheckCircle, XCircle, CigaretteOff, Dog, VolumeX, Ban, ClipboardList, Star, MapPin, DollarSign, Home, Maximize, X } from "lucide-react";
+import { Wifi, Wind, Waves, Dumbbell, Car, Tv, UtensilsCrossed, WashingMachine, CheckCircle, CigaretteOff, Dog, VolumeX, Ban, ClipboardList, MapPin, Home, Maximize, X } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import StatusBadge from "@/components/StatusBadge";
 import { mockAgencies, mockOwners, mockHouseRules } from "@/data/mockData";
 import { useToast } from "@/hooks/use-toast";
@@ -47,77 +46,61 @@ const PropertyDetailDialog = ({ property, open, onOpenChange }: PropertyDetailDi
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0">
         {/* Header */}
-        <div className="sticky top-0 bg-background z-10 px-6 pt-6 pb-4 border-b">
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-bold">{property.name}</h2>
-                <StatusBadge status={property.status} />
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground mt-1">
-                <span className="text-sm">ID: #{property.id}</span>
-                <span>·</span>
-                <MapPin className="h-3.5 w-3.5" />
-                <span className="text-sm">{property.location}, {property.city}</span>
-              </div>
-            </div>
+        <div className="px-6 pt-6 pb-4 border-b">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl font-bold">{property.name}</h2>
+            <StatusBadge status={property.status} />
+          </div>
+          <div className="flex items-center gap-2 text-muted-foreground mt-1">
+            <span className="text-sm">ID: #{property.id}</span>
+            <span>·</span>
+            <MapPin className="h-3.5 w-3.5" />
+            <span className="text-sm">{property.location}, {property.city}</span>
           </div>
         </div>
 
         <div className="px-6 pb-6 space-y-5">
-          {/* Image Gallery */}
-          <div className="grid grid-cols-3 gap-3 h-64">
-            <div className="col-span-2 rounded-lg overflow-hidden bg-muted">
+          {/* Image Gallery — large left + 2 stacked right */}
+          <div className="grid grid-cols-4 gap-2" style={{ height: "280px" }}>
+            <button
+              className="col-span-3 rounded-xl overflow-hidden bg-muted"
+              onClick={() => setMainImage(0)}
+            >
               <img src={property.images[mainImage]} alt={property.name} className="w-full h-full object-cover" />
-            </div>
-            <div className="flex flex-col gap-3">
-              {property.images.slice(0, 3).map((img, i) => (
+            </button>
+            <div className="flex flex-col gap-2">
+              {property.images.slice(1, 3).map((img, i) => (
                 <button
                   key={i}
-                  onClick={() => setMainImage(i)}
-                  className={`rounded-lg overflow-hidden bg-muted flex-1 border-2 transition-colors ${mainImage === i ? "border-primary" : "border-transparent"}`}
+                  onClick={() => setMainImage(i + 1)}
+                  className={`rounded-xl overflow-hidden bg-muted flex-1 border-2 transition-colors ${mainImage === i + 1 ? "border-primary" : "border-transparent"}`}
                 >
-                  <img src={img} alt={`View ${i + 1}`} className="w-full h-full object-cover" />
+                  <img src={img} alt={`View ${i + 2}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Info Cards */}
+          {/* Info Cards — clean style matching mockup */}
           <div className="grid grid-cols-3 gap-3">
-            <Card>
-              <CardContent className="p-3 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <DollarSign className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Price</p>
-                  <p className="text-base font-bold">${property.price.toLocaleString()}<span className="text-sm font-normal text-muted-foreground"> {durationLabel}</span></p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-3 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Home className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Type</p>
-                  <p className="text-base font-bold">{property.type}</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-3 flex items-center gap-3">
-                <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Maximize className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Size</p>
-                  <p className="text-base font-bold">{property.sqft.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">sq ft</span></p>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="border rounded-xl p-4">
+              <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1">Price</p>
+              <p className="text-xl font-bold">${property.price.toLocaleString()}<span className="text-sm font-normal text-muted-foreground"> {durationLabel}</span></p>
+            </div>
+            <div className="border rounded-xl p-4">
+              <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1">Type</p>
+              <div className="flex items-center gap-2">
+                <Home className="h-5 w-5 text-muted-foreground" />
+                <p className="text-xl font-bold">{property.type}</p>
+              </div>
+            </div>
+            <div className="border rounded-xl p-4">
+              <p className="text-[11px] text-muted-foreground uppercase tracking-wider mb-1">Size</p>
+              <div className="flex items-center gap-2">
+                <Maximize className="h-5 w-5 text-muted-foreground" />
+                <p className="text-xl font-bold">{property.sqft.toLocaleString()} <span className="text-sm font-normal text-muted-foreground">sq ft</span></p>
+              </div>
+            </div>
           </div>
 
           {/* Content: About + Listed By / House Rules */}
@@ -148,31 +131,29 @@ const PropertyDetailDialog = ({ property, open, onOpenChange }: PropertyDetailDi
             {/* Right: Listed By + House Rules */}
             <div className="col-span-2 space-y-5">
               {/* Listed By */}
-              <Card>
-                <CardContent className="p-4 space-y-3">
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Listed By</p>
-                  {owner && (
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-                        {owner.fullName.split(" ").map(n => n[0]).join("")}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold">{owner.fullName}</p>
-                        {agency && <p className="text-xs text-muted-foreground">{agency.name}</p>}
-                      </div>
+              <div className="border rounded-xl p-4 space-y-3">
+                <p className="text-[11px] text-primary uppercase tracking-wider font-semibold">Listed By</p>
+                {owner && (
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+                      {owner.fullName.split(" ").map(n => n[0]).join("")}
                     </div>
-                  )}
-                  {agency?.status === "Verified" && (
-                    <div className="flex items-center gap-1.5 text-xs text-success">
-                      <CheckCircle className="h-3.5 w-3.5" />
-                      Verified Agency
+                    <div>
+                      <p className="text-sm font-semibold">{owner.fullName}</p>
+                      {agency && <p className="text-xs text-muted-foreground">{agency.name}</p>}
                     </div>
-                  )}
-                  <Button variant="outline" size="sm" className="w-full text-xs">
-                    View Agency Profile
-                  </Button>
-                </CardContent>
-              </Card>
+                  </div>
+                )}
+                {agency?.status === "Verified" && (
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600">
+                    <CheckCircle className="h-3.5 w-3.5" />
+                    Verified Agency
+                  </div>
+                )}
+                <Button variant="outline" size="sm" className="w-full text-xs">
+                  View Agency Profile
+                </Button>
+              </div>
 
               {/* House Rules */}
               {houseRules && (
@@ -196,12 +177,12 @@ const PropertyDetailDialog = ({ property, open, onOpenChange }: PropertyDetailDi
 
           {/* Action Buttons */}
           {property.status === "Pending Approval" && (
-            <div className="flex justify-end gap-3 pt-2 border-t">
+            <div className="flex justify-end gap-3 pt-4 border-t">
               <Button variant="outline" onClick={handleReject}>
                 <X className="h-4 w-4 mr-2" />
                 Reject
               </Button>
-              <Button onClick={handleApprove}>
+              <Button className="bg-primary hover:bg-primary/90" onClick={handleApprove}>
                 <CheckCircle className="h-4 w-4 mr-2" />
                 Approve Property
               </Button>
