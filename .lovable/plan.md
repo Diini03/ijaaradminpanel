@@ -1,69 +1,95 @@
 
-# Ijaar Admin Panel — Implementation Plan
 
-## Overview
-Ijaar is a rental management platform for Somalia. This plan covers the full admin panel with 6 main pages, auth pages, settings, and all CRUD form pages — using static mock data with Somali-relevant details (SAR currency, Somali cities like Mogadishu, Hargeisa, Kismayo, etc.).
+# Ijaar Admin Panel — Data Model Update & Detail Views
 
----
+## What We're Building
 
-## Phase 1: Foundation & Layout
-- **Shared layout** with collapsible sidebar (Dashboard, Rental Requests, Properties, Payments, Agencies, Users, Settings at bottom) matching the dark navy/white design from mockups
-- **Top navbar** with global search, notification bell, help icon, and admin user avatar
-- **Color theme** update: navy blue primary (#1B2559), warm accents (orange for alerts, green for success, red for errors)
-- **Reusable components**: StatCard (icon, value, trend %), DataTable with tabs/filters/pagination, StatusBadge, ActionButtons
+Based on the provided data models and UI mockups, we need to:
 
-## Phase 2: Authentication Pages
-- **Login page** (`/login`) — email & password form with Ijaar branding, demo credentials hint (admin@ijaar.com / demo123)
-- **Register page** (`/register`) — name, email, password, confirm password form
-- **Auth guard** — redirects unauthenticated users to login, stores auth state in a simple context/store
-- **Logout** functionality from sidebar
-
-## Phase 3: Dashboard Page (`/`)
-- 6 stat cards (Total Properties, Pending Listings, Pending Requests, Active Rentals, Total Agencies, Payment Success)
-- 2 area charts (Rental Requests Over Time, New Listings Over Time) with weekly data
-- Action Queue section with two lists: Pending Rental Requests (Reject/Verify buttons) and Pending Property Approvals (View/Approve buttons)
-
-## Phase 4: Rental Requests Page (`/rental-requests`)
-- Stat summary and tabs: All Requests, Pending, Approved, Rejected (with counts)
-- Data table: Request ID, User (avatar + name + role), Property (thumbnail + name + specs), Agency, Date, Status
-- Select All checkbox, pagination, Export Data button
-- **Create Request form page** (`/rental-requests/new`) — fields: user selection, property selection, agency, notes, dates
-
-## Phase 5: Properties Management Page (`/properties`)
-- 4 stat cards (Total, Pending Approval, Active, Rejected)
-- Tabs: All Properties, Pending Approval, Active, Rejected
-- Search bar + Filter, Date Range, Sort controls
-- Table: Property (thumbnail + name + ID), Agency (avatar + name), Location, Price (SAR), Type badge, Status, Actions (approve/reject/edit/view)
-- **Add Property form page** (`/properties/new`) — fields: name, type (House/Room/Apartment), location (Somali cities), price, bedrooms, bathrooms, agency, description, images upload area
-
-## Phase 6: Payments Tracking Page (`/payments`)
-- 3 stat cards (Total Revenue, Pending Amount, Failed Transactions)
-- Tabs: All Payments, Paid, Pending, Failed
-- Filter & Export buttons
-- Table: Payment ID, User (avatar + name + role), Property, Method badge (EVC Plus, Edahab, etc.), Amount, Date, Status
-
-## Phase 7: Agencies Directory Page (`/agencies`)
-- 3 stat cards (Total Agencies, Pending Verification, Active Rentals)
-- Search bar + Status/Type filter dropdowns
-- Table: Agency (avatar + name + ID), Type (Company/Individual), Status (Verified/Pending/Suspended), Listings count, Active Rentals count, Actions (view/verify/suspend)
-- **Add Agency form page** (`/agencies/new`) — fields: name, type, contact email, phone, address, city, license number
-
-## Phase 8: Users Management Page (`/users`)
-- 2 stat cards (Total Users, Active Rentals) + inline search + status filter
-- Table: User (avatar + name + role), Contact Info (email + phone), Joined Date, Rentals count, Status, Actions
-- **Add User form page** (`/users/new`) — fields: full name, email, phone (+252 format), role (Landlord/Tenant), city
-
-## Phase 9: Settings Page (`/settings`)
-- **Profile** tab: admin name, email, avatar, phone
-- **Notifications** tab: email/push notification toggles
-- **Platform** tab: platform name, default currency, timezone, language
-- **Payments** tab: payment gateway settings, commission rates
-- **Appearance** tab: theme toggle (light/dark), sidebar style
+1. **Update all mock data interfaces and records** to match the real app models (adding missing fields like `description`, `sqft`, `rentalDuration`, `amenities`, `houseRules`, `owner`, etc.)
+2. **Add detail view pages/dialogs** for Properties and Users (clickable rows that open rich detail views as shown in the mockups)
+3. **Update forms** to match the real model fields
+4. **Add new data types** for Owner, PaymentMethod, Transaction, Invoice, Notification
 
 ---
 
-## Design Principles
-- All mock data uses realistic Somali names, cities (Mogadishu, Hargeisa, Kismayo, Bosaso, Galkayo), SAR currency, Somali phone numbers (+252)
-- Payment methods: EVC Plus, Edahab, oeeb (Somali mobile money)
-- Clean, professional white-background design with navy sidebar
-- Consistent spacing, card-based layouts, and table patterns across all pages
+## Phase 1: Update Data Models & Mock Data
+
+Update `src/data/mockData.ts` with all new interfaces and extended mock records:
+
+- **User**: Add `password` (omitted in display), `level`, `profileImage`, `otp` fields
+- **Property**: Add `description`, `sqft`, `rentalDuration` (monthly/3monthly/year), `amenities` array, `houseRules` object, `ownerId`, `images` array (multiple), `rate`
+- **Owner**: New interface — `fullName`, `phone`, `address`, `email`, `accountNumber`
+- **Agency**: Add `description`, `locations`, `level`, `totalProperties`, `totalActive`, `totalAvailable`, `rate`
+- **Payment**: Add `propertyId`, `houseRulesId`, `currency`, `paymentMethodId`, `invoiceId`, `referenceNumber`
+- **PaymentMethod**: New interface — `name`, `serviceProvider`, `active`
+- **Transaction**: New interface — `paymentId`, `userId`, `propertyId`, `type` (rent/deposit), `date`, `state`, `paymentMethodId`
+- **Invoice**: New interface — `userId`, `transactionId`, `paymentId`, `transactionDate`, `paymentStatus`
+- **Notification**: New interface — `userId`, `title`, `message`, `type`, `isRead`, `sentAt`
+
+Add mock data for Owners, PaymentMethods, Transactions, Invoices, and Notifications with Somali-relevant details.
+
+## Phase 2: Property Detail Page
+
+Create `src/pages/PropertyDetail.tsx` at route `/properties/:id` — matching the uploaded mockup (Body.png):
+
+- **Header**: Property name + status badge + ID + location
+- **Image gallery**: Main image + side thumbnails from the `images` array
+- **Info cards row**: Price/mo, Type (with icon), Size (sqft)
+- **About section**: Property description text
+- **Listed By sidebar**: Owner/Agency avatar, name, agency name, verified badge, "View Agency Profile" link
+- **Amenities**: Tag chips (WiFi, AC, Pool, Gym, etc.)
+- **House Rules**: Icon + text list with active/inactive states
+- **Action buttons**: Reject / Approve Property (for pending ones)
+
+Wire the "View" button on Properties table rows to navigate to `/properties/:id`.
+
+## Phase 3: User Detail Dialog
+
+Create `src/components/UserDetailDialog.tsx` — matching the uploaded mockup (Body-7.png):
+
+- **Modal/dialog overlay** (not a separate page — the mockup shows it as a modal)
+- **Header**: "User Details" + "Viewing profile for ID #..."
+- **Profile section**: Avatar with online indicator, name, status badge, joined date, city, Edit/Reset buttons
+- **Contact Information card**: Email (with copy icon), Phone (with copy icon)
+- **Rental Summary card**: Current Properties count, Total Spent (SAR), Last Payment date with status
+- **ID Verification Documents section**: Verification status badge + placeholder document area
+- **Footer**: Close button + "Edit Profile" navy button
+
+Wire the "View" (Eye) button on Users table rows to open this dialog.
+
+## Phase 4: Update Property Form
+
+Update `src/pages/NewProperty.tsx` to include all real model fields:
+
+- Add: `description` (textarea), `sqft` (number), `rentalDuration` (select: Monthly/3 Months/Yearly), `rate` (number)
+- Add: **Amenities** section — checkbox grid (WiFi, AC, Pool, Gym, Parking, TV, Kitchen, Laundry)
+- Add: **House Rules** section — dynamic list with text input + toggle for active/inactive
+- Add: **Owner** selection dropdown (from mock owners)
+- Update images section to support multiple image slots
+
+## Phase 5: Update Agency Form & Detail
+
+Update `src/pages/NewAgency.tsx` with new fields: `description`, `locations` (multi-input), `level`, `rate`.
+
+## Phase 6: Wire Routes & Navigation
+
+- Add route `/properties/:id` to `App.tsx`
+- Make property table rows clickable (navigate on click or via View button)
+- Make user table View button open the UserDetailDialog
+- Make payment rows show basic detail (payment ID, reference number, invoice link)
+
+---
+
+## Technical Details
+
+- All new routes added to `App.tsx` Routes config
+- Property detail uses `useParams` to find the property from mock data
+- User detail uses a Dialog component (shadcn `Dialog`) triggered by clicking the Eye icon
+- Currency displayed as **SAR** throughout (matching the mockup)
+- Copy-to-clipboard for email/phone uses `navigator.clipboard.writeText`
+- All new components follow existing patterns (Tailwind classes, shadcn/ui components)
+
+**Files to create**: `PropertyDetail.tsx`, `UserDetailDialog.tsx`
+**Files to update**: `mockData.ts`, `App.tsx`, `Properties.tsx`, `UsersPage.tsx`, `NewProperty.tsx`, `NewAgency.tsx`
+
