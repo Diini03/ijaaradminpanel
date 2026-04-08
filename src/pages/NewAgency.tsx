@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -69,13 +70,32 @@ const NewAgency = () => {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label>Address</Label>
-                <Input placeholder="Street address" />
+                <Label>Level</Label>
+                <Select>
+                  <SelectTrigger><SelectValue placeholder="Select level" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Premium">Premium</SelectItem>
+                    <SelectItem value="Standard">Standard</SelectItem>
+                    <SelectItem value="Basic">Basic</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="space-y-2 md:col-span-2">
+              <div className="space-y-2">
+                <Label>Rating</Label>
+                <Input type="number" placeholder="e.g. 4.5" min="0" max="5" step="0.1" />
+              </div>
+              <div className="space-y-2">
                 <Label>License Number</Label>
                 <Input placeholder="e.g. MR-2024-001" required />
               </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label>Address / Locations</Label>
+                <Input placeholder="e.g. Mogadishu, Hargeisa (comma-separated)" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Description</Label>
+              <Textarea placeholder="Describe the agency..." rows={3} />
             </div>
             <div className="flex gap-3">
               <Button type="submit">Add Agency</Button>

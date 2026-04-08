@@ -90,7 +90,7 @@ const Properties = () => {
                       <TableCell><StatusBadge status={prop.status} /></TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" className="h-7 text-xs">View</Button>
+                          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => navigate(`/properties/${prop.id}`)}>View</Button>
                           <Button variant="ghost" size="sm" className="h-7 text-xs">Edit</Button>
                         </div>
                       </TableCell>
