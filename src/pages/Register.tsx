@@ -45,7 +45,10 @@ const Register = () => {
     <div className="flex min-h-screen items-center justify-center bg-primary p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
-          <img src={ijaarLogo} alt="Ijaar" className="mx-auto h-16 w-auto" />
+          <div className="flex items-center justify-center gap-2">
+            <img src={ijaarLogo} alt="Ijaar" className="h-14 w-14 object-contain" />
+            <span className="text-3xl font-bold text-foreground tracking-tight">ijaar</span>
+          </div>
           <CardTitle className="text-2xl">Create Account</CardTitle>
           <CardDescription>Register for Ijaar admin access</CardDescription>
         </CardHeader>
