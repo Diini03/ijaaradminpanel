@@ -33,11 +33,8 @@ const AdminSidebar = () => {
 
   return (
     <Sidebar collapsible="icon" className="border-r-0">
-      <div className="flex h-16 items-center gap-2 px-4">
-        <Home className="h-8 w-8 text-sidebar-primary" />
-        {!collapsed && (
-          <span className="text-xl font-bold text-sidebar-primary">Ijaar</span>
-        )}
+      <div className="flex h-16 items-center justify-center px-4">
+        <img src={ijaarLogo} alt="Ijaar" className={collapsed ? "h-8 w-auto" : "h-10 w-auto"} />
       </div>
 
       <SidebarContent className="px-2">
