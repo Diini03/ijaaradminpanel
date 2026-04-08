@@ -1,7 +1,8 @@
 import {
   LayoutDashboard, FileText, Building2, CreditCard,
-  Briefcase, Users, Settings, LogOut, Home,
+  Briefcase, Users, Settings, LogOut,
 } from "lucide-react";
+import ijaarLogo from "@/assets/ijaar-logo.png";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
