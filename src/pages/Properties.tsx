@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Building2, Clock, CheckCircle, XCircle, Plus, Filter, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,6 +11,7 @@ import StatusBadge from "@/components/StatusBadge";
 import { mockProperties } from "@/data/mockData";
 
 const Properties = () => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState("all");
   const [search, setSearch] = useState("");
 
@@ -89,7 +90,7 @@ const Properties = () => {
                       <TableCell><StatusBadge status={prop.status} /></TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button variant="ghost" size="sm" className="h-7 text-xs">View</Button>
+                          <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => navigate(`/properties/${prop.id}`)}>View</Button>
                           <Button variant="ghost" size="sm" className="h-7 text-xs">Edit</Button>
                         </div>
                       </TableCell>
