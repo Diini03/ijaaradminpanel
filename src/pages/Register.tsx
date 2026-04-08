@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Home } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import ijaarLogo from "@/assets/ijaar-logo.png";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -45,9 +45,8 @@ const Register = () => {
     <div className="flex min-h-screen items-center justify-center bg-primary p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2">
-            <img src={ijaarLogo} alt="Ijaar" className="h-14 w-14 object-contain" />
-            <span className="text-3xl font-bold text-foreground tracking-tight">ijaar</span>
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-primary">
+            <Home className="h-8 w-8 text-primary-foreground" />
           </div>
           <CardTitle className="text-2xl">Create Account</CardTitle>
           <CardDescription>Register for Ijaar admin access</CardDescription>
